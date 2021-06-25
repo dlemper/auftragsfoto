@@ -5,10 +5,22 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "electron:build": "vue-cli-service electron:build",
+    "electron:serve": "vue-cli-service electron:serve",
+    "postinstall": "electron-builder install-app-deps",
+    "postuninstall": "electron-builder install-app-deps"
   },
+  "main": "background.js",
   "dependencies": {
+    "bootstrap-vue": "^2.17.3",
     "core-js": "^3.6.5",
+    "fastify": "^3.17.0",
+    "fastify-multipart": "^4.0.6",
+    "fastify-sensible": "^3.1.1",
+    "fastify-static": "^4.2.2",
+    "long": "^4.0.0",
+    "pino-pretty": "^5.0.2",
     "register-service-worker": "^1.7.1",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0"
@@ -21,12 +33,20 @@
     "@vue/cli-service": "~4.5.0",
     "@vue/eslint-config-prettier": "^6.0.0",
     "babel-eslint": "^10.1.0",
+    "bootstrap": "^4.5.2",
+    "copy-webpack-plugin": "^6.4.1",
+    "electron": "^12.0.0",
+    "electron-devtools-installer": "^3.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-vue": "^6.2.2",
+    "popper.js": "^1.16.1",
+    "portal-vue": "^2.1.7",
     "prettier": "^2.2.1",
-    "sass": "^1.26.5",
-    "sass-loader": "^8.0.2",
+    "sass": "^1.26.11",
+    "sass-loader": "^10.0.2",
+    "vue-cli-plugin-bootstrap-vue": "~0.7.0",
+    "vue-cli-plugin-electron-builder": "~2.0.0",
     "vue-template-compiler": "^2.6.11"
   }
 }
