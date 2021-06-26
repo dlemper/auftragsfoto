@@ -29,7 +29,7 @@ fastify.get('/api/:photo', async (req, reply) => {
 fastify.post('/api/file', async function (req, reply) {
   const files = await req.saveRequestFiles();
 
-  for (file of files) {
+  for (const file of files) {
     await rename(file.filepath, path.join(outdir, file.filename));
   }
 
