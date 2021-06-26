@@ -4,7 +4,7 @@ const util = require('util')
 const { pipeline } = require('stream')
 const fastify = require('fastify')()
 
-const { exists } = fs.promises
+const { exists, rename } = fs.promises
 
 const pump = util.promisify(pipeline)
 
@@ -26,31 +26,12 @@ fastify.get('/api/:photo', async (req, reply) => {
   throw fastify.httpErrors.notFound()
 })
 
-fastify.post('/', async function (req, reply) {
-  // process a single file
-  // also, consider that if you allow to upload multiple files
-  // you must consume all files otherwise the promise will never fulfill
-  const data = await req.file()
+fastify.post('/api/file', async function (req, reply) {
+  const files = await req.saveRequestFiles();
 
-  data.file // stream
-  data.fields // other parsed parts
-  data.fieldname
-  data.filename
-  data.encoding
-  data.mimetype
-
-  // to accumulate the file in memory! Be careful!
-  //
-  // await data.toBuffer() // Buffer
-  //
-  // or
-
-  await pump(data.file, fs.createWriteStream(data.filename))
-
-  // be careful of permission issues on disk and not overwrite
-  // sensitive files that could cause security risks
-  
-  // also, consider that if the file stream is not consumed, the promise will never fulfill
+  for (file of files) {
+    await rename(file.filepath, path.join(outdir, file.filename));
+  }
 
   reply.send()
 })
