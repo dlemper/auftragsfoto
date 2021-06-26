@@ -3,8 +3,8 @@
 import { app, protocol, BrowserWindow } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
-import { TrayMenu } from '@/electron/TrayMenu';
-import '@/fastify';
+import { TrayMenu } from "@/electron/TrayMenu";
+import "@/fastify";
 const isDevelopment = process.env.NODE_ENV !== "production";
 
 // Scheme must be registered before the app is ready
@@ -68,10 +68,10 @@ app.on("ready", async () => {
 
 const appElements = {
   tray: null,
-  windows: []
+  windows: [],
 };
 
-app.on('ready', () => {
+app.on("ready", () => {
   appElements.tray = new TrayMenu();
 });
 

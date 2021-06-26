@@ -1,8 +1,8 @@
-import { app, Tray, Menu, nativeImage } from 'electron';
+import { app, Tray, Menu, nativeImage } from "electron";
 
 export class TrayMenu {
   constructor() {
-    this.iconPath = '/assets/camera.png';
+    this.iconPath = "/assets/camera.png";
     this.tray = new Tray(this.createNativeImage());
   }
 
@@ -20,17 +20,17 @@ export class TrayMenu {
     // This method will create the Menu for the tray
     const contextMenu = Menu.buildFromTemplate([
       {
-        label: 'Tokei',
-        type: 'normal',
-        click: () => { 
-          /* Later this will open the Main Window */ 
-        }
+        label: "Tokei",
+        type: "normal",
+        click: () => {
+          /* Later this will open the Main Window */
+        },
       },
       {
-        label: 'Quit',
-        type: 'normal',
-        click: () => app.quit()
-      }
+        label: "Quit",
+        type: "normal",
+        click: () => app.quit(),
+      },
     ]);
     return contextMenu;
   }
