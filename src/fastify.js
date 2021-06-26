@@ -1,12 +1,8 @@
 const path = require("path");
 const fs = require("fs");
-const util = require("util");
-const { pipeline } = require("stream");
 const fastify = require("fastify")();
 
 const { exists, rename } = fs.promises;
-
-const pump = util.promisify(pipeline);
 
 fastify.register(require("fastify-sensible"));
 
@@ -17,17 +13,19 @@ fastify.register(require("fastify-static"), {
 });
 
 fastify.head("/api/:photo", async (req, reply) => {
-  if (!(await req.params.photo)) {
+  if (!(await exists(req.params.photo))) {
     throw fastify.httpErrors.notFound();
   }
 
-  reply.send()
+  reply.send();
 });
 
 fastify.get("/api/:photo", async (req, reply) => {
-  throw fastify.httpErrors.notFound();
+  if (!(await exists(req.params.photo))) {
+    throw fastify.httpErrors.notFound();
+  }
 
-  reply.send()
+  reply.send();
 });
 
 fastify.post("/api/file", async function (req, reply) {
