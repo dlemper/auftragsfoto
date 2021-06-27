@@ -8,4 +8,14 @@ module.exports = {
       }),
     ],
   },
+  pluginOptions: {
+    electronBuilder: {
+      chainWebpackMainProcess: (config) => {
+        // Chain webpack config for electron main process only
+        config.externals({
+            formidable: 'commonjs formidable',
+        });
+      },
+    },
+  },
 };
