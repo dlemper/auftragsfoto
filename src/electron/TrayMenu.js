@@ -1,37 +1,54 @@
-import { app, Tray, Menu, nativeImage } from "electron";
+import { app, Tray, Menu, nativeImage, shell } from "electron";
+import os from "os";
+import path from "path";
 
 export class TrayMenu {
   constructor() {
-    this.iconPath = "/assets/camera.png";
-    this.tray = new Tray(this.createNativeImage());
-  }
+    this.iconPath = path.resolve(__static, 'img', 'icons', 'favicon-16x16.png');
 
-  createNativeImage() {
-    // Since we never know where the app is installed,
-    // we need to add the app base path to it.
-    const path = `${app.getAppPath()}${this.iconPath}`;
-    const image = nativeImage.createFromPath(path);
-    // Marks the image as a template image.
+    const image = nativeImage.createFromPath(this.iconPath);
     image.setTemplateImage(true);
-    return image;
-  }
 
-  createMenu() {
-    // This method will create the Menu for the tray
-    const contextMenu = Menu.buildFromTemplate([
-      {
-        label: "Tokei",
+    const addrs = [
+      os.hostname(),
+      ...Object
+        .values(os.networkInterfaces())
+        .flat()
+        .filter(n => !n.internal)
+        .map(n => n.address)
+    ];
+
+    this.tray = new Tray(image);
+
+    this.tray.setContextMenu(Menu.buildFromTemplate([
+      ...addrs.map(n => ({
+        label: `http://${n}:3000/`,
         type: "normal",
         click: () => {
-          /* Later this will open the Main Window */
+          shell.openExternal(`http://${n}:3000/`);
         },
+      })),
+      {
+        type: "separator",
       },
       {
-        label: "Quit",
+        label: "Ordner öffnen",
         type: "normal",
         click: () => app.quit(),
       },
-    ]);
-    return contextMenu;
+      {
+        label: "Einstellungen",
+        type: "normal",
+        click: () => app.quit(),
+      },
+      {
+        type: "separator",
+      },
+      {
+        label: "Beenden",
+        type: "normal",
+        click: () => app.quit(),
+      },
+    ]));
   }
 }
