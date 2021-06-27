@@ -82,7 +82,7 @@ export default {
   },
 
   methods: {
-    onSubmit() {
+    async onSubmit() {
       if (!this.file || !this.orderId) {
         return;
       }
