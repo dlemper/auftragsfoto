@@ -5,7 +5,7 @@ const formidable = require('formidable');
 const path = require('path');
 const mv = require('mv');
 
-const serve = serveStatic('public', { 'index': ['index.html', 'index.htm'] })
+const serve = serveStatic('client/dist', { 'index': ['index.html', 'index.htm'] })
 const fromParse = (req) => new Promise((resolve, reject) => {
   const form = formidable();
 
