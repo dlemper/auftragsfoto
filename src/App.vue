@@ -1,32 +1,73 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view />
-  </div>
+  <b-container fluid>
+    <b-row>
+      <b-col class="mt-2">
+        <b-form @submit.prevent="onSubmit" @reset="onReset" ref="form">
+          <b-form-group label="Verzeichnis:" label-for="uploadDir">
+            <b-input-group>
+              <b-form-input
+                v-model="config.uploadDir"
+                name="uploadDir"
+                placeholder="Choose a directory..."
+              >
+              </b-form-input>
+              <b-input-group-append>
+                <b-button type="button" variant="secondary" @click="openDialog">
+                  <b-icon icon="folder2-open" /> Auswählen
+                </b-button>
+              </b-input-group-append>
+            </b-input-group>
+          </b-form-group>
+
+          <b-form-row class="justify-content-between mb-3">
+            <b-col>
+              <b-button type="reset" variant="danger">
+                <b-icon icon="x" />
+                Abbrechen
+              </b-button>
+            </b-col>
+
+            <b-col class="text-right">
+              <b-button type="submit" variant="primary">
+                <b-icon icon="upload" />
+                Speichern
+              </b-button>
+            </b-col>
+          </b-form-row>
+        </b-form>
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+export default {
+  data() {
+    return {
+      config: {},
+    };
+  },
 
-#nav {
-  padding: 30px;
+  methods: {
+    onSubmit() {
+      window.close();
+    },
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+    async onReset() {
+      window.close();
+    },
 
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
-</style>
+    async openDialog() {
+      try {
+        this.config.uploadDir = await window.ipcRenderer.invoke("open-dialog");
+      } catch (e) {
+        // ignore
+      }
+    },
+  },
+
+  async mounted() {
+    this.config = await window.ipcRenderer.invoke("get-config");
+  },
+};
+</script>
