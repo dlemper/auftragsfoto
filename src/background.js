@@ -1,10 +1,14 @@
 "use strict";
 
-import { app, protocol } from "electron"; // , BrowserWindow
+import { app, protocol, ipcMain, dialog } from "electron"; // , BrowserWindow
 // import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 // import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import { TrayMenu } from "@/electron/TrayMenu";
 import "@/electron/httpserver";
+import { readFile, writeFile } from "fs/promises";
+import path from "path";
+import { getPath } from "./electron/getpath";
+
 const isDevelopment = process.env.NODE_ENV !== "production";
 
 // Scheme must be registered before the app is ready
@@ -66,6 +70,10 @@ app.on("ready", async () => {
   createWindow();
 });*/
 
+app.on("window-all-closed", (e) => {
+  e.preventDefault();
+});
+
 const appElements = {
   tray: null,
   windows: [],
@@ -89,3 +97,34 @@ if (isDevelopment) {
     });
   }
 }
+
+ipcMain.handle("get-config", async () => {
+  try {
+    return JSON.parse(
+      await readFile(path.join(app.getPath("userData"), "config.json"))
+    );
+  } catch {
+    return {
+      uploadDir: app.getPath("documents"),
+    };
+  }
+});
+
+ipcMain.handle("set-config", async (_, config) =>
+  writeFile(
+    path.join(app.getPath("userData"), "config.json"),
+    JSON.stringify(config, null, 2)
+  )
+);
+
+ipcMain.handle("open-dialog", async () => {
+  const path = await dialog.showOpenDialog({
+    properties: ["openDirectory"],
+  });
+
+  if (path.canceled) {
+    throw new Error("was canceled");
+  } else {
+    return path.filePaths[0];
+  }
+});
