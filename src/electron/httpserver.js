@@ -5,7 +5,10 @@ const formidable = require('formidable');
 const path = require('path');
 const mv = require('mv');
 
-const serve = serveStatic('client/dist', { 'index': ['index.html', 'index.htm'] })
+const { getPath } = require('./getpath');
+
+const serve = serveStatic('client/dist', { 'index': ['index.html', 'index.htm'] });
+
 const fromParse = (req) => new Promise((resolve, reject) => {
   const form = formidable();
 
@@ -17,6 +20,7 @@ const fromParse = (req) => new Promise((resolve, reject) => {
     }
   });
 });
+
 const mvClob = (from, to) => new Promise((resolve, reject) => mv(from, to, { clobber: false }, (err) => {
   if (err) {
     reject(err);
@@ -30,9 +34,10 @@ const server = http.createServer(async function onRequest(req, res) {
   if (req.url === '/api/upload' && req.method.toLowerCase() === 'post') {
     try {
       const { files } = await fromParse(req);
+      const uploadDir = await getPath();
 
       for (const file of Object.values(files)) {
-        await mvClob(file.path, path.join(__dirname, 'upload', file.name));
+        await mvClob(file.path, path.join(uploadDir, file.name));
       }
 
       res.writeHead(200);
