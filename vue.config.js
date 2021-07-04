@@ -22,6 +22,9 @@ module.exports = {
           formidable: "commonjs formidable",
         });
       },
+      builderOptions: {
+        publish: ['github']
+      },
     },
   },
 };
