@@ -59,6 +59,7 @@ export class TrayMenu {
               width: 600,
               height: 148,
               show: true,
+              useContentSize: true,
               webPreferences: {
                 nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
                 preload: path.join(__dirname, "preload.js"),
