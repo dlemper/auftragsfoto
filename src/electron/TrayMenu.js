@@ -1,4 +1,12 @@
-import { app, Tray, Menu, nativeImage, shell, BrowserWindow } from "electron";
+import {
+  app,
+  Tray,
+  Menu,
+  nativeImage,
+  shell,
+  BrowserWindow,
+  nativeTheme,
+} from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import os from "os";
 import path from "path";
@@ -6,9 +14,9 @@ import { getPath } from "./getpath";
 
 export class TrayMenu {
   constructor() {
-    this.iconPath = path.resolve(__static, "img", "camera.png");
+    //this.iconPath = path.resolve(__static, "img", "camera.png");
 
-    const image = nativeImage.createFromPath(this.iconPath);
+    const image = nativeImage.createFromPath(this.getIcon());
     image.setTemplateImage(true);
 
     const addrs = [
@@ -20,6 +28,8 @@ export class TrayMenu {
     ];
 
     this.tray = new Tray(image);
+    this.tray.setPressedImage(path.join(__static, "img", "camera-light.png"));
+    this.tray.setToolTip("Auftragsfoto");
 
     this.tray.setContextMenu(
       Menu.buildFromTemplate([
@@ -42,9 +52,7 @@ export class TrayMenu {
           label: "Einstellungen",
           type: "normal",
           click: async () => {
-            this.iconPath = path.resolve(__static, "img", "camera.png");
-
-            const image = nativeImage.createFromPath(this.iconPath);
+            const image = nativeImage.createFromPath(this.getIcon());
             image.setTemplateImage(true);
 
             const window = new BrowserWindow({
@@ -80,5 +88,11 @@ export class TrayMenu {
         },
       ])
     );
+  }
+
+  getIcon() {
+    if (nativeTheme.shouldUseDarkColors)
+      return path.resolve(__static, "img", "camera-light.png");
+    return path.resolve(__static, "img", "camera.png");
   }
 }

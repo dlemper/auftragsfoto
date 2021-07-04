@@ -72,6 +72,7 @@ app.on("ready", async () => {
 
 app.on("window-all-closed", (e) => {
   e.preventDefault();
+  app.dock.hide();
 });
 
 const appElements = {
@@ -80,8 +81,31 @@ const appElements = {
 };
 
 app.whenReady().then(() => {
+  if (app.dock) app.dock.hide();
   appElements.tray = new TrayMenu();
 });
+
+/*const { Menu, Tray } = require('electron')
+
+const getIcon = () => {
+  if (systemPreferences.isDarkMode()) return path.resolve(__static, "img", "camera-light.png");;
+  return path.resolve(__static, "img", "camera.png");;
+};
+
+let tray = null
+app.whenReady().then(() => {
+  const iconPath=path.resolve(__static, "img", "camera.png");
+  tray = new Tray(iconPath)
+  tray.setPressedImage(path.join(__static, "img", 'camera-light.png'));
+  const contextMenu = Menu.buildFromTemplate([
+    { label: 'Item1', type: 'radio' },
+    { label: 'Item2', type: 'radio' },
+    { label: 'Item3', type: 'radio', checked: true },
+    { label: 'Item4', type: 'radio' }
+  ])
+  tray.setToolTip('This is my application.')
+  tray.setContextMenu(contextMenu)
+})*/
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {
