@@ -7,7 +7,7 @@ import { TrayMenu } from "@/electron/TrayMenu";
 import "@/electron/httpserver";
 import { readFile, writeFile } from "fs/promises";
 import path from "path";
-import { getPath } from "./electron/getpath";
+import { autoUpdater } from "electron-updater"
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
@@ -83,6 +83,7 @@ const appElements = {
 app.whenReady().then(() => {
   if (app.dock) app.dock.hide();
   appElements.tray = new TrayMenu();
+  autoUpdater.checkForUpdatesAndNotify();
 });
 
 /*const { Menu, Tray } = require('electron')
