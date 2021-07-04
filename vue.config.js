@@ -2,6 +2,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   configureWebpack: {
+    devtool: "source-map",
     plugins: [
       new CopyPlugin({
         patterns: [
