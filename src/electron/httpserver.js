@@ -7,7 +7,7 @@ const mv = require('mv');
 
 const { getPath } = require('./getpath');
 
-const serve = serveStatic('client/dist', { 'index': ['index.html', 'index.htm'] });
+const serve = serveStatic(path.join(__dirname, 'client', 'dist'), { 'index': ['index.html', 'index.htm'] });
 
 const fromParse = (req) => new Promise((resolve, reject) => {
   const form = formidable();
