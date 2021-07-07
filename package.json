@@ -53,8 +53,5 @@
     "vue-cli-plugin-bootstrap-vue": "~0.7.0",
     "vue-cli-plugin-electron-builder": "^2.1.1",
     "vue-template-compiler": "^2.6.11"
-  },
-  "resolutions": {
-    "vue-cli-plugin-electron-builder/electron-builder": "21.2.0"
   }
 }
