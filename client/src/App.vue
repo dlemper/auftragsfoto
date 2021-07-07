@@ -95,7 +95,7 @@ export default {
         new File([this.file], `${this.orderId}.jpg`, { type: this.file.type })
       );
 
-      await fetch("/api/file", {
+      await fetch("/api/upload", {
         method: "POST",
         body: formData,
       });
