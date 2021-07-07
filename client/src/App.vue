@@ -89,16 +89,32 @@ export default {
 
       this.isUploading = true;
 
-      const formData = new FormData();
-      formData.append(
-        "file",
-        new File([this.file], `${this.orderId}.jpg`, { type: this.file.type })
-      );
+      try {
+        const formData = new FormData();
+        formData.append(
+          "file",
+          new File([this.file], `${this.orderId}.jpg`, { type: this.file.type })
+        );
 
-      await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!res.ok) {
+          throw new Error(
+            `${res.status} ${res.statusText}: ${await res.text()}`
+          );
+        }
+
+        this.$refs.form.reset();
+      } catch (e) {
+        this.$bvModal.msgBoxOk(`Es ist ein Fehler aufgetreten: ${e.message}`, {
+          title: "Fehler",
+          okVariant: "danger",
+          centered: true,
+        });
+      }
 
       this.isUploading = false;
     },
