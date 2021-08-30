@@ -90,13 +90,19 @@ export default {
       this.isUploading = true;
 
       try {
+        let res = await fetch(`/api/file?name=${this.orderId}.jpg`);
+
+        if (res.ok) {
+          throw new Error(`Datei "${this.orderId}.jpg" existiert bereits.`);
+        }
+
         const formData = new FormData();
         formData.append(
           "file",
           new File([this.file], `${this.orderId}.jpg`, { type: this.file.type })
         );
 
-        const res = await fetch("/api/upload", {
+        res = await fetch("/api/upload", {
           method: "POST",
           body: formData,
         });
