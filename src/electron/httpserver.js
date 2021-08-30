@@ -4,6 +4,7 @@ const serveStatic = require("serve-static");
 const formidable = require("formidable");
 const path = require("path");
 const mv = require("mv");
+const fs = require("fs").promises;
 
 const { getPath } = require("./getpath");
 
@@ -26,7 +27,7 @@ const fromParse = (req) =>
 
 const mvClob = (from, to) =>
   new Promise((resolve, reject) =>
-    mv(from, to, { clobber: false }, (err) => {
+    mv(from, to, { clobber: true }, (err) => {
       if (err) {
         reject(err);
       } else {
@@ -37,7 +38,20 @@ const mvClob = (from, to) =>
 
 // Create server
 const server = http.createServer(async function onRequest(req, res) {
-  if (req.url === "/api/upload" && req.method.toLowerCase() === "post") {
+  const { pathname, searchParams } = new URL(req.url);
+  const method = req.method.toLowerCase();
+
+  if (pathname === "/api/file" && method === "head") {
+    try {
+      await fs.stat(searchParams.get("name"));
+
+      res.writeHead(200);
+      res.end();
+    } catch {
+      res.writeHead(404);
+      res.end();
+    }
+  } else if (pathname === "/api/upload" && method === "post") {
     try {
       const { files } = await fromParse(req);
       const uploadDir = await getPath();
