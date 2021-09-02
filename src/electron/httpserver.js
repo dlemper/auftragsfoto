@@ -38,8 +38,12 @@ const mvClob = (from, to) =>
 
 // Create server
 const server = http.createServer(async function onRequest(req, res) {
-  const { pathname, searchParams } = new URL(req.url);
+  const { pathname, searchParams } = new URL(
+    req.url,
+    `http://${req.headers.host}`
+  );
   const method = req.method.toLowerCase();
+  console.log(pathname, searchParams, method);
 
   if (pathname === "/api/file" && method === "head") {
     try {
@@ -72,11 +76,10 @@ const server = http.createServer(async function onRequest(req, res) {
       res.write(e.message);
       res.end();
     }
-
-    return;
+  } else {
+    console.log("serve file");
+    serve(req, res, finalhandler(req, res));
   }
-
-  serve(req, res, finalhandler(req, res));
 });
 
 // Listen
